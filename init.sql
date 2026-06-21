@@ -1,6 +1,6 @@
 CREATE TABLE LocalizationWords (
     Id SERIAL PRIMARY KEY,
-    LanguageCode VARCHAR(10) NOT KEY NULL,
+    LanguageCode VARCHAR(10) NOT NULL,
     Category VARCHAR(50) NOT NULL,
     Word VARCHAR(255) NOT NULL
 );
@@ -20,9 +20,9 @@ INSERT INTO LocalizationWords (LanguageCode, Category, Word) VALUES
 ('de-DE', 'Genre', 'Rock'), ('de-DE', 'Genre', 'Pop'), ('de-DE', 'Genre', 'Jazz'), ('de-DE', 'Genre', 'Schlager'), ('de-DE', 'Genre', 'Elektronisch'), ('de-DE', 'Genre', 'Klassik'), ('de-DE', 'Genre', 'Volksmusik'), ('de-DE', 'Genre', 'Hip-Hop'),
 ('de-DE', 'Review', 'Tolles Lied!'), ('de-DE', 'Review', 'Ich liebe das.'), ('de-DE', 'Review', 'Nicht schlecht.'), ('de-DE', 'Review', 'Erstaunlicher Gesang.'), ('de-DE', 'Review', 'Schrecklich.'), ('de-DE', 'Review', 'Ein wahres Meisterwerk.'), ('de-DE', 'Review', 'Habe es 10 Mal gehört.'), ('de-DE', 'Review', 'Langweilig.'),
 
-('uk-UA', 'ArtistFirst', 'Іван'), ('uk-UA', 'ArtistFirst', 'Тарас'), ('uk-UA', 'ArtistFirst', 'Марія'), ('uk-UA', 'ArtistFirst', 'Оксана'), ('uk-UA', 'ArtistFirst', 'Шалені'), ('uk-UA', 'ArtistFirst', 'Дикі'), ('uk-UA', 'ArtistFirst', 'Сліпі'), ('uk-UA', 'ArtistFirst', 'Нічні'),
-('uk-UA', 'ArtistLast', 'Шевченко'), ('uk-UA', 'ArtistLast', 'Коваленко'), ('uk-UA', 'ArtistLast', 'Ткаченко'), ('uk-UA', 'ArtistLast', 'Кравченко'), ('uk-UA', 'ArtistLast', 'Хлопці'), ('uk-UA', 'ArtistLast', 'Козаки'), ('uk-UA', 'ArtistLast', 'Тіні'), ('uk-UA', 'ArtistLast', 'Пси'),
-('uk-UA', 'SongAdjective', 'Темний'), ('uk-UA', 'SongAdjective', 'Світлий'), ('uk-UA', 'SongAdjective', 'Швидкий'), ('uk-UA', 'SongAdjective', 'Повільний'), ('uk-UA', 'SongAdjective', 'Щасливий'), ('uk-UA', 'SongAdjective', 'Сумний'), ('uk-UA', 'SongAdjective', 'Загублений'), ('uk-UA', 'SongAdjective', 'Знайдений'),
-('uk-UA', 'SongNoun', 'Кохання'), ('uk-UA', 'SongNoun', 'Серце'), ('uk-UA', 'SongNoun', 'Світ'), ('uk-UA', 'SongNoun', 'Ніч'), ('uk-UA', 'SongNoun', 'День'), ('uk-UA', 'SongNoun', 'Життя'), ('uk-UA', 'SongNoun', 'Сон'), ('uk-UA', 'SongNoun', 'Вогонь'),
-('uk-UA', 'Genre', 'Рок'), ('uk-UA', 'Genre', 'Поп'), ('uk-UA', 'Genre', 'Джаз'), ('uk-UA', 'Genre', 'Фолк'), ('uk-UA', 'Genre', 'Електроніка'), ('uk-UA', 'Genre', 'Класика'), ('uk-UA', 'Genre', 'Кантрі'), ('uk-UA', 'Genre', 'Хіп-Хоп'),
-('uk-UA', 'Review', 'Чудова пісня!'), ('uk-UA', 'Review', 'Мені це подобається.'), ('uk-UA', 'Review', 'Непогано.'), ('uk-UA', 'Review', 'Дивовижний вокал.'), ('uk-UA', 'Review', 'Жахливо.'), ('uk-UA', 'Review', 'Справжній шедевр.'), ('uk-UA', 'Review', 'Слухав 10 разів.'), ('uk-UA', 'Review', 'Нудно.');
+('ru-RU', 'ArtistFirst', 'Иван'), ('ru-RU', 'ArtistFirst', 'Алексей'), ('ru-RU', 'ArtistFirst', 'Мария'), ('ru-RU', 'ArtistFirst', 'Анна'), ('ru-RU', 'ArtistFirst', 'Безумные'), ('ru-RU', 'ArtistFirst', 'Дикие'), ('ru-RU', 'ArtistFirst', 'Слепые'), ('ru-RU', 'ArtistFirst', 'Ночные'),
+('ru-RU', 'ArtistLast', 'Иванов'), ('ru-RU', 'ArtistLast', 'Смирнов'), ('ru-RU', 'ArtistLast', 'Петров'), ('ru-RU', 'ArtistLast', 'Соколов'), ('ru-RU', 'ArtistLast', 'Парни'), ('ru-RU', 'ArtistLast', 'Волки'), ('ru-RU', 'ArtistLast', 'Тени'), ('ru-RU', 'ArtistLast', 'Псы'),
+('ru-RU', 'SongAdjective', 'Темный'), ('ru-RU', 'SongAdjective', 'Светлый'), ('ru-RU', 'SongAdjective', 'Быстрый'), ('ru-RU', 'SongAdjective', 'Медленный'), ('ru-RU', 'SongAdjective', 'Счастливый'), ('ru-RU', 'SongAdjective', 'Грустный'), ('ru-RU', 'SongAdjective', 'Потерянный'), ('ru-RU', 'SongAdjective', 'Найденный'),
+('ru-RU', 'SongNoun', 'Любовь'), ('ru-RU', 'SongNoun', 'Сердце'), ('ru-RU', 'SongNoun', 'Мир'), ('ru-RU', 'SongNoun', 'Ночь'), ('ru-RU', 'SongNoun', 'День'), ('ru-RU', 'SongNoun', 'Жизнь'), ('ru-RU', 'SongNoun', 'Сон'), ('ru-RU', 'SongNoun', 'Огонь'),
+('ru-RU', 'Genre', 'Рок'), ('ru-RU', 'Genre', 'Поп'), ('ru-RU', 'Genre', 'Джаз'), ('ru-RU', 'Genre', 'Фолк'), ('ru-RU', 'Genre', 'Электроника'), ('ru-RU', 'Genre', 'Классика'), ('ru-RU', 'Genre', 'Кантри'), ('ru-RU', 'Genre', 'Хип-Хоп'),
+('ru-RU', 'Review', 'Отличная песня!'), ('ru-RU', 'Review', 'Мне это нравится.'), ('ru-RU', 'Review', 'Неплохо.'), ('ru-RU', 'Review', 'Удивительный вокал.'), ('ru-RU', 'Review', 'Ужасно.'), ('ru-RU', 'Review', 'Настоящий шедевр.'), ('ru-RU', 'Review', 'Слушал 10 раз.'), ('ru-RU', 'Review', 'Скучно.');
