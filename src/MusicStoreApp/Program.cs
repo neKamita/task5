@@ -2,6 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<MusicStoreApp.MusicService>();
 
 var app = builder.Build();
 
@@ -22,8 +23,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
-
 app.UseAuthorization();
+
+app.MapGet("/api/songs", (string region, int seed, int page, double likes, MusicStoreApp.MusicService musicService) =>
+{
+    var data = musicService.GenerateData(region, seed, page, likes);
+    return Results.Json(data);
+});
 
 app.MapStaticAssets();
 app.MapRazorPages()
