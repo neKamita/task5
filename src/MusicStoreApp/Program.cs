@@ -5,6 +5,12 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+try {
+    MusicStoreApp.VocabularyCache.Load("Host=localhost;Database=musicstore;Username=musicuser;Password=musicpassword");
+} catch {
+    // Ignore db load error for now in Junior style
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
