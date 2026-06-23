@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Music Store Showcase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .toolbar label {
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .toolbar input,
+        .toolbar select {
+            padding: 5px;
+            margin-top: 5px;
+        }
+
+        .toolbar button {
+            padding: 5px 15px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .view-controls {
+            margin-bottom: 20px;
+        }
+
+        .view-controls button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        .expandable {
+            cursor: pointer;
+            background-color: #fafafa;
+        }
+
+        .expanded-details {
+            display: none;
+            background: #fff;
+        }
+
+        .expanded-details.active {
+            display: table-row;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            width: 220px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .card h3 {
+            margin: 10px 0 5px 0;
+            font-size: 16px;
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .card .likes {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .details-content {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .details-svg {
+            width: 200px;
+            height: 200px;
+        }
+
+        .details-info {
+            flex: 1;
+        }
+
+        .review-box {
+            font-style: italic;
+            background: #f9f9f9;
+            padding: 10px;
+            margin-top: 5px;
+            border-left: 4px solid #ddd;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .pagination button {
+            padding: 5px 15px;
+        }
+
+        midi-player {
+            display: block;
+            margin-top: 15px;
+            width: 100%;
+        }
+    </style>
+    <script
+        src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/html-midi-player@1.5.0"></script>
+</head>
+
+<body>
+
+    <h1>Music Store Showcase</h1>
+
+    <div class="toolbar">
+        <label>
+            Region:
+            <select id="region">
+                <option value="en-US">USA (English)</option>
+                <option value="de-DE">Germany (German)</option>
+                <option value="ru-RU">Russia (Russian)</option>
+            </select>
+        </label>
+        <label>
+            Seed:
+            <input type="number" id="seed" value="42">
+        </label>
+        <button id="randomSeedBtn">Random Seed</button>
+        <label>
+            Likes per song:
+            <input type="number" id="likes" value="0.5" step="0.1" min="0" max="10">
+        </label>
+    </div>
+
+    <div class="view-controls">
+        <button id="tableViewBtn">Table View</button>
+        <button id="galleryViewBtn">Gallery View</button>
+    </div>
+
+    <div id="tableContainer">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Album</th>
+                    <th>Genre</th>
+                    <th>Likes</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+        <div class="pagination">
+            <button id="prevPageBtn">Previous Page</button>
+            <span id="pageLabel">Page 1</span>
+            <button id="nextPageBtn">Next Page</button>
+        </div>
+    </div>
+
+    <div id="galleryContainer" style="display: none;">
+        <div class="gallery" id="galleryContent"></div>
+    </div>
+
+    <script>
+        let currentMode = 'table';
+        let currentPage = 1;
+        let isFetching = false;
+
+        const regionEl = document.getElementById('region');
+        const seedEl = document.getElementById('seed');
+        const likesEl = document.getElementById('likes');
+
+        const tableContainer = document.getElementById('tableContainer');
+        const galleryContainer = document.getElementById('galleryContainer');
+        const tableBody = document.getElementById('tableBody');
+        const galleryContent = document.getElementById('galleryContent');
+
+        function generateRandomSeed() {
+            seedEl.value = Math.floor(Math.random() * 10000000);
+            reloadData();
+        }
+
+        document.getElementById('randomSeedBtn').addEventListener('click', generateRandomSeed);
+
+        document.getElementById('tableViewBtn').addEventListener('click', () => {
+            currentMode = 'table';
+            tableContainer.style.display = 'block';
+            galleryContainer.style.display = 'none';
+            currentPage = 1;
+            reloadData();
+        });
+
+        document.getElementById('galleryViewBtn').addEventListener('click', () => {
+            currentMode = 'gallery';
+            tableContainer.style.display = 'none';
+            galleryContainer.style.display = 'block';
+            currentPage = 1;
+            galleryContent.innerHTML = '';
+            reloadData();
+        });
+
+        regionEl.addEventListener('change', reloadData);
+        seedEl.addEventListener('input', reloadData);
+        likesEl.addEventListener('input', reloadData);
+
+        document.getElementById('prevPageBtn').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                reloadData();
+            }
+        });
+        document.getElementById('nextPageBtn').addEventListener('click', () => {
+            currentPage++;
+            reloadData();
+        });
+
+        window.addEventListener('scroll', () => {
+            if (currentMode === 'gallery' && !isFetching) {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+                    currentPage++;
+                    fetchData(true);
+                }
+            }
+        });
+
+        function reloadData() {
+            if (currentMode === 'table') {
+                document.getElementById('pageLabel').innerText = 'Page ' + currentPage;
+                fetchData(false);
+            } else {
+                currentPage = 1;
+                galleryContent.innerHTML = '';
+                window.scrollTo(0, 0);
+                fetchData(true);
+            }
+        }
+
+        async function fetchData(append) {
+            isFetching = true;
+            const region = regionEl.value;
+            const seed = seedEl.value || 0;
+            const likes = likesEl.value || 0;
+
+            try {
+                const response = await fetch(`/api/songs?region=${region}&seed=${seed}&page=${currentPage}&likes=${likes}`);
+                const data = await response.json();
+
+                if (currentMode === 'table') {
+                    renderTable(data);
+                } else if (append) {
+                    renderGallery(data);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+            isFetching = false;
+        }
+
+        function renderTable(data) {
+            tableBody.innerHTML = '';
+            data.forEach(song => {
+                const tr = document.createElement('tr');
+                tr.className = 'expandable';
+                tr.innerHTML = `
+                    <td>${song.index}</td>
+                    <td>${song.title}</td>
+                    <td>${song.artist}</td>
+                    <td>${song.album}</td>
+                    <td>${song.genre}</td>
+                    <td>${song.likes} ❤️</td>
+                `;
+
+                const detailsTr = document.createElement('tr');
+                detailsTr.className = 'expanded-details';
+
+                const reviewsHtml = song.reviews.map(r => `<div class="review-box">${r}</div>`).join('');
+
+                // Construct MIDI data URI
+                const midiUri = `data:audio/midi;base64,${song.midiBase64}`;
+
+                detailsTr.innerHTML = `
+                    <td colspan="6">
+                        <div class="details-content">
+                            <div class="details-svg">${song.coverSvg}</div>
+                            <div class="details-info">
+                                <h3>${song.title} by ${song.artist}</h3>
+                                <midi-player src="${midiUri}" sound-font visualizer="#myVisualizer"></midi-player>
+                                <h4>Reviews:</h4>
+                                ${reviewsHtml}
+                            </div>
+                        </div>
+                    </td>
+                `;
+
+                tr.addEventListener('click', () => {
+                    detailsTr.classList.toggle('active');
+                });
+
+                tableBody.appendChild(tr);
+                tableBody.appendChild(detailsTr);
+            });
+        }
+
+        function renderGallery(data) {
+            data.forEach(song => {
+                const div = document.createElement('div');
+                div.className = 'card';
+
+                const midiUri = `data:audio/midi;base64,${song.midiBase64}`;
+
+                div.innerHTML = `
+                    ${song.coverSvg}
+                    <h3>${song.title}</h3>
+                    <p>${song.artist}</p>
+                    <p>${song.genre} - ${song.album}</p>
+                    <div class="likes">${song.likes} ❤️</div>
+                    <midi-player src="${midiUri}" sound-font></midi-player>
+                `;
+                galleryContent.appendChild(div);
+            });
+        }
+
+        reloadData();
+    </script>
+</body>
+
+</html>
