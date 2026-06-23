@@ -1,7 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
 builder.Services.AddScoped<MusicStoreApp.MusicService>();
 
 var app = builder.Build();
@@ -16,8 +15,6 @@ try {
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -32,8 +29,7 @@ app.MapGet("/api/songs", (string region, int seed, int page, double likes, Music
     return Results.Json(data);
 });
 
+app.UseDefaultFiles();
 app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
 
 app.Run();
