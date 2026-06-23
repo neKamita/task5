@@ -275,7 +275,6 @@
             currentMode = 'table';
             tableContainer.style.display = 'block';
             galleryContainer.style.display = 'none';
-            currentPage = 1;
             reloadData();
         });
 
@@ -283,14 +282,22 @@
             currentMode = 'gallery';
             tableContainer.style.display = 'none';
             galleryContainer.style.display = 'block';
-            currentPage = 1;
             galleryContent.innerHTML = '';
             reloadData();
         });
 
-        regionEl.addEventListener('change', reloadData);
-        seedEl.addEventListener('input', reloadData);
-        likesEl.addEventListener('input', reloadData);
+        function onParamChange() {
+            currentPage = 1;
+            if (currentMode === 'gallery') {
+                galleryContent.innerHTML = '';
+                window.scrollTo(0, 0);
+            }
+            reloadData();
+        }
+
+        regionEl.addEventListener('change', onParamChange);
+        seedEl.addEventListener('input', onParamChange);
+        likesEl.addEventListener('input', onParamChange);
 
         document.getElementById('prevPageBtn').addEventListener('click', () => {
             if (currentPage > 1) {
@@ -317,9 +324,6 @@
                 document.getElementById('pageLabel').innerText = 'Page ' + currentPage;
                 fetchData(false);
             } else {
-                currentPage = 1;
-                galleryContent.innerHTML = '';
-                window.scrollTo(0, 0);
                 fetchData(true);
             }
         }
