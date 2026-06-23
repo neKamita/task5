@@ -1,6 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddScoped<MusicStoreApp.MusicService>();
 
 var app = builder.Build();
@@ -9,10 +8,8 @@ try {
     var connStr = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? "Host=localhost;Database=musicstore;Username=musicuser;Password=musicpassword";
     MusicStoreApp.VocabularyCache.Load(connStr);
 } catch {
-    // Ignore db load error for now in Junior style
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
