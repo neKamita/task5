@@ -15,11 +15,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-
-app.UseRouting();
-app.UseAuthorization();
-
 app.MapGet("/api/songs", (string region, int seed, int page, double likes, MusicStoreApp.MusicService musicService) =>
 {
     var data = musicService.GenerateData(region, seed, page, likes);
