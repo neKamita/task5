@@ -22,6 +22,6 @@ app.MapGet("/api/songs", (string region, int seed, int page, double likes, Music
 });
 
 app.UseDefaultFiles();
-app.MapStaticAssets();
+app.UseStaticFiles();
 
 app.Run();
