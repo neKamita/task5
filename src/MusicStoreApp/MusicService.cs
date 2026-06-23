@@ -3,6 +3,7 @@ using Melanchall.DryWetMidi.Common;
 using Melanchall.DryWetMidi.Composing;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
+using Jdenticon;
 
 namespace MusicStoreApp;
 
@@ -68,27 +69,7 @@ public class MusicService
 
     private string GenerateSvg(int seed, string title, string artist)
     {
-        var r = new Random(seed);
-        var c1 = $"rgb({r.Next(256)},{r.Next(256)},{r.Next(256)})";
-        var c2 = $"rgb({r.Next(256)},{r.Next(256)},{r.Next(256)})";
-        var shapeType = r.Next(1, 3);
-        var shape = "";
-        if (shapeType == 1)
-        {
-            shape = $"<circle cx='{r.Next(50, 150)}' cy='{r.Next(50, 150)}' r='{r.Next(20, 80)}' fill='rgba(255,255,255,0.3)' />";
-        }
-        else
-        {
-            shape = $"<rect x='{r.Next(10, 100)}' y='{r.Next(10, 100)}' width='{r.Next(50, 150)}' height='{r.Next(50, 150)}' fill='rgba(255,255,255,0.3)' />";
-        }
-
-        return $@"<svg width='200' height='200' xmlns='http://www.w3.org/2000/svg'>
-<defs><linearGradient id='grad{seed}' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:{c1};stop-opacity:1' /><stop offset='100%' style='stop-color:{c2};stop-opacity:1' /></linearGradient></defs>
-<rect width='200' height='200' fill='url(#grad{seed})' />
-{shape}
-<text x='10' y='90' fill='white' font-family='sans-serif' font-size='16' font-weight='bold'>{title}</text>
-<text x='10' y='110' fill='white' font-family='sans-serif' font-size='12'>{artist}</text>
-</svg>";
+        return Jdenticon.Identicon.FromValue(seed.ToString(), size: 200).ToSvg();
     }
 
     private string GenerateMidi(int seed)
