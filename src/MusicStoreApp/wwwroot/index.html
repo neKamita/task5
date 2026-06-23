@@ -259,6 +259,8 @@
         const seedEl = document.getElementById('seed');
         const likesEl = document.getElementById('likes');
 
+        seedEl.value = Math.floor(Math.random() * 10000000);
+
         const tableContainer = document.getElementById('tableContainer');
         const galleryContainer = document.getElementById('galleryContainer');
         const tableBody = document.getElementById('tableBody');
