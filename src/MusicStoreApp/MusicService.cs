@@ -45,8 +45,8 @@ public class MusicService
 
             int likesBase = (int)Math.Floor(likesPerSong);
             double fraction = likesPerSong - likesBase;
-            
-            var likesRandom = new Randomizer(recordSeed + 1000000); 
+
+            var likesRandom = new Randomizer(recordSeed + 1000000);
             int extraLike = likesRandom.Double(0, 1) < fraction ? 1 : 0;
             song.Likes = likesBase + extraLike;
 
@@ -70,36 +70,50 @@ public class MusicService
     private string GenerateSvg(int seed, string title, string artist)
     {
         var baseSvg = Jdenticon.Identicon.FromValue(seed.ToString(), size: 200).ToSvg();
-        
-        // Ensure text is XML-safe (basic escape)
+
         var safeTitle = System.Security.SecurityElement.Escape(title) ?? "";
         var safeArtist = System.Security.SecurityElement.Escape(artist) ?? "";
-        
+
         var textOverlay = $"<rect width='200' height='40' fill='rgba(0,0,0,0.5)' y='0' />" +
                           $"<text x='10' y='25' fill='white' font-size='16' font-weight='bold' font-family='sans-serif'>{safeTitle}</text>" +
                           $"<rect width='200' height='30' fill='rgba(0,0,0,0.5)' y='170' />" +
                           $"<text x='10' y='190' fill='white' font-size='14' font-family='sans-serif'>{safeArtist}</text>";
-                          
+
         return baseSvg.Replace("</svg>", textOverlay + "</svg>");
     }
 
     private string GenerateMidi(int seed)
     {
         var r = new Randomizer(seed);
-        var patternBuilder = new PatternBuilder()
-            .SetNoteLength(new MusicalTimeSpan(1, 8));
+        var patternBuilder = new PatternBuilder();
 
         var notes = new[] { Melanchall.DryWetMidi.MusicTheory.NoteName.C, Melanchall.DryWetMidi.MusicTheory.NoteName.D, Melanchall.DryWetMidi.MusicTheory.NoteName.E, Melanchall.DryWetMidi.MusicTheory.NoteName.F, Melanchall.DryWetMidi.MusicTheory.NoteName.G, Melanchall.DryWetMidi.MusicTheory.NoteName.A, Melanchall.DryWetMidi.MusicTheory.NoteName.B };
+        var noteLengths = new[] { new MusicalTimeSpan(1, 4), new MusicalTimeSpan(1, 8), new MusicalTimeSpan(1, 16) };
 
-        for (int i = 0; i < 8; i++)
+        int noteCount = r.Number(12, 24);
+
+        for (int i = 0; i < noteCount; i++)
         {
-            var note = r.ArrayElement(notes);
-            var octave = r.Number(4, 5);
-            patternBuilder.Note(Melanchall.DryWetMidi.MusicTheory.Note.Get(note, octave));
+            var noteLength = r.ArrayElement(noteLengths);
+            patternBuilder.SetNoteLength(noteLength);
+
+            if (r.Number(1, 100) > 85)
+            {
+                patternBuilder.StepForward(noteLength);
+            }
+            else
+            {
+                var note = r.ArrayElement(notes);
+                var octave = r.Number(3, 6);
+                patternBuilder.Note(Melanchall.DryWetMidi.MusicTheory.Note.Get(note, octave));
+            }
         }
 
         var pattern = patternBuilder.Build();
-        var midiFile = pattern.ToFile(TempoMap.Default);
+        int tempoBpm = r.Number(80, 180);
+        var tempoMap = TempoMap.Create(Tempo.FromBeatsPerMinute(tempoBpm));
+        
+        var midiFile = pattern.ToFile(tempoMap);
         using var ms = new MemoryStream();
         midiFile.Write(ms);
         return Convert.ToBase64String(ms.ToArray());
