@@ -342,6 +342,13 @@
                     renderTable(data);
                 } else if (append) {
                     renderGallery(data);
+
+                    setTimeout(() => {
+                        if (currentMode === 'gallery' && !isFetching && document.body.offsetHeight <= window.innerHeight + 50) {
+                            currentPage++;
+                            fetchData(true);
+                        }
+                    }, 100);
                 }
             } catch (err) {
                 console.error(err);
@@ -368,7 +375,6 @@
 
                 const reviewsHtml = song.reviews.map(r => `<div class="review-box">${r}</div>`).join('');
 
-                // Construct MIDI data URI
                 const midiUri = `data:audio/midi;base64,${song.midiBase64}`;
 
                 detailsTr.innerHTML = `
