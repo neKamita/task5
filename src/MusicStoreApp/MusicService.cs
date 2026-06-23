@@ -69,7 +69,18 @@ public class MusicService
 
     private string GenerateSvg(int seed, string title, string artist)
     {
-        return Jdenticon.Identicon.FromValue(seed.ToString(), size: 200).ToSvg();
+        var baseSvg = Jdenticon.Identicon.FromValue(seed.ToString(), size: 200).ToSvg();
+        
+        // Ensure text is XML-safe (basic escape)
+        var safeTitle = System.Security.SecurityElement.Escape(title) ?? "";
+        var safeArtist = System.Security.SecurityElement.Escape(artist) ?? "";
+        
+        var textOverlay = $"<rect width='200' height='40' fill='rgba(0,0,0,0.5)' y='0' />" +
+                          $"<text x='10' y='25' fill='white' font-size='16' font-weight='bold' font-family='sans-serif'>{safeTitle}</text>" +
+                          $"<rect width='200' height='30' fill='rgba(0,0,0,0.5)' y='170' />" +
+                          $"<text x='10' y='190' fill='white' font-size='14' font-family='sans-serif'>{safeArtist}</text>";
+                          
+        return baseSvg.Replace("</svg>", textOverlay + "</svg>");
     }
 
     private string GenerateMidi(int seed)
