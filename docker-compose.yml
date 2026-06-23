@@ -11,3 +11,14 @@ services:
       - "5432:5432"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  web:
+    build:
+      context: ./src/MusicStoreApp
+      dockerfile: Dockerfile
+    ports:
+      - "80:8080"
+    environment:
+      - DB_CONNECTION_STRING=Host=postgres;Database=musicstore;Username=musicuser;Password=musicpassword
+    depends_on:
+      - postgres

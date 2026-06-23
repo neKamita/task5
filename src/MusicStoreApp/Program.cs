@@ -7,7 +7,8 @@ builder.Services.AddScoped<MusicStoreApp.MusicService>();
 var app = builder.Build();
 
 try {
-    MusicStoreApp.VocabularyCache.Load("Host=localhost;Database=musicstore;Username=musicuser;Password=musicpassword");
+    var connStr = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? "Host=localhost;Database=musicstore;Username=musicuser;Password=musicpassword";
+    MusicStoreApp.VocabularyCache.Load(connStr);
 } catch {
     // Ignore db load error for now in Junior style
 }
