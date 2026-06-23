@@ -13,7 +13,7 @@ public static class VocabularyCache
         using var conn = new NpgsqlConnection(connectionString);
         conn.Open();
 
-        using var cmd = new NpgsqlCommand("SELECT LanguageCode, Category, Word FROM LocalizationWords", conn);
+        using var cmd = new NpgsqlCommand("SELECT LanguageCode, Category, Word FROM LocalizationWords ORDER BY LanguageCode, Category, Word", conn);
         using var reader = cmd.ExecuteReader();
 
         while (reader.Read())
